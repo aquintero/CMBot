@@ -1,0 +1,20 @@
+version: '3.7'
+
+volumes:
+  dynamodb-data:
+
+services:
+  tradebot:
+    build:
+      context: ./
+      dockerfile: ./docker/tradebot/Dockerfile
+    depends_on:
+      - dynamodb
+    restart: unless-stopped
+
+  dynamodb:
+    image: amazon/dynamodb-local:1.11.477
+    restart: unless-stopped
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/
+    volumes:
+     - dynamodb-data:/home/dynamodblocal/data
